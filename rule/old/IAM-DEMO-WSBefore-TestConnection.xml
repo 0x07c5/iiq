@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule created="1726803202566" id="c0a86602920d1a5a81920d7dd2060010" language="beanshell" modified="1726827332959" name="IAM-DEMO-WSBefore-TestConnection" type="WebServiceBeforeOperationRule">
+  <Description>The Web Services connector will call this rule before performing ANY defined operation. This rule can be used to add/update values in the endpoint object before performing the operation and/or add persistent values to the application's data.
+(See information about what to return for more information)</Description>
+  <ReferencedRules>
+    <Reference class="sailpoint.object.Rule" id="c0a801fe921011358192108dcdf50076" name="Reference Library"/>
+  </ReferencedRules>
+  <Signature returnType="Object">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>The application associated with the operation being processed.</Description>
+      </Argument>
+      <Argument name="requestEndPoint">
+        <Description>The current request information containing the header, body, context url, method type, response attribute map, 
+                and response code. This object can be modified directly and returned by the rule to update the endpoint information that is
+                used by the current operation.
+                </Description>
+      </Argument>
+      <Argument name="oldResponseMap">
+        <Description>Earlier response object </Description>
+      </Argument>
+      <Argument name="restClient">
+        <Description>REST Client Object</Description>
+      </Argument>
+      <Argument name="provisioningPlan">
+        <Description>A ProvisioningPlan object containing the payload of the http request. A provisioning plan has an account request which defines the operation to be performed on the account.
+                 An account request can contain multiple attribute requests and each attribute request represents an operation on a single account attribute.
+                </Description>
+      </Argument>
+      <Argument name="partition">
+        <Description>If applicable, a Partition object with the current aggregation's partitioning information.
+                </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="Map">
+        <Description>An updated or unmodified 'requestEndPoint' object. If application object modifications are desired, create a map containing keys 'updatedEndPoint' and 'connectorStateMap' and use it as the return value;
+                Within the new map, the 'updatedEndPoint' can be set to an updated or unmodified 'requestEndPoint' object. The 'connectorStateMap' will be saved as persistent values in the application definition.
+                </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+    import org.apache.log4j.LogManager;
+    import org.apache.log4j.Logger;
+
+    import org.apache.log4j.PropertyConfigurator;
+    import java.util.Properties;
+
+    Properties props = new Properties();
+    props.setProperty("property.log.name", "iam.demo");
+    PropertyConfigurator.configure(props);
+
+    Logger logger = LogManager.getLogger("iam.demo");
+
+    System.out.println(logger);
+    System.out.println(logger.getClass());
+    System.out.println(logger.getName());
+    Enumeration appenders = logger.getAllAppenders();
+    while(appenders.hasMoreElements()) {
+      Appender appender = (Appender) appenders.nextElement();
+      System.out.println("appender = " + appender);
+    }
+
+    import bsh.Interpreter;
+    Interpreter interpreter = this.interpreter;
+
+    for(Object variable: this.variables) {
+      logger.info("---");
+      Object value = interpreter.get(variable);
+      logger.info(variable + ": " + value);
+      if (value != null)
+      logger.info("-> " + value.getClass());
+    }
+
+    return requestEndPoint;
+  </Source>
+</Rule>

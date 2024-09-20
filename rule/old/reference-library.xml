@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule created="" id="" language="beanshell" name="Reference Library">
+  <!--
+  <ReferencedRules>
+    <Reference class="sailpoint.object.Rule" id="c0a801fe921011358192108dcdf50076" name="Reference Library"/>
+  </ReferencedRules>
+  -->
+  <Source>
+    public Object getValue(Object ref, String name) throws Exception {
+      return ref
+        .getClass()
+        .getField(name)
+        .get(ref)
+      ;
+    }
+
+    public void setValue(Object ref, String name, Object value) throws Exception {
+      ref
+        .getClass()
+        .getField(name)
+        .set(ref, value)
+      ;
+    }
+
+    public Object invoke(Object ref, String name, Object ...args) throws Exception {
+      return ref
+        .getClass()
+        .getMethod(name)
+        .invoke(ref, args)
+      ;
+    }
+  </Source>
+</Rule>
