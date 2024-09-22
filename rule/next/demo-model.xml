@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule created="" id="c0a801fe921815ed819219100c92006e" language="beanshell" modified="" name="DEMO BodyModel Library">
+  <Source>
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.GsonBuilder;
+
+import java.lang.reflect.Modifier;
+
+public class Operator {
+  public static final String append = "append";
+  public static final String replace = "replace";
+}
+
+public class Path {
+  public static final String firstName = "name.first_name";
+  public static final String lastName = "name.last_name";
+}
+
+public class Operation {
+  public String op;
+  public String path;
+  public Object value;
+
+  public Operation(String op, String path, Object value) {
+    this.op = op;
+    this.path = path;
+    this.value = value;
+  }
+}
+
+public class BodyModel {
+  public Operation[] operations;
+  public String[] schemas;
+
+  public BodyModel(Operation[] operations, String[] schemas) {
+    this.operations = operations;
+    this.schemas = schemas;
+  }
+
+  public String toString() {
+    return new GsonBuilder()
+      .setPrettyPrinting()
+      .setExclusionStrategies(new ExclusionStrategy() {
+        public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+          return fieldAttributes.getName().startsWith("_");
+        }
+        public boolean shouldSkipClass(Class aClass) {
+          return false;
+        }
+      })
+      .create()
+      .toJson(this)
+    ;
+  }
+}
+  </Source>
+</Rule>

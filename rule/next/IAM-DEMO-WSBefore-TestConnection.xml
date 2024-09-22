@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
-<Rule created="1726803202566" id="c0a86602920d1a5a81920d7dd2060010" language="beanshell" modified="" name="IAM-DEMO-WSBefore-TestConnection" type="WebServiceBeforeOperationRule">
+<Rule created="" id="c0a86602920d1a5a81920d7dd2060010" language="beanshell" modified="" name="IAM-DEMO-WSBefore-TestConnection" type="WebServiceBeforeOperationRule">
   <Description>The Web Services connector will call this rule before performing ANY defined operation. This rule can be used to add/update values in the endpoint object before performing the operation and/or add persistent values to the application's data.
 (See information about what to return for more information)</Description>
   <ReferencedRules>
@@ -51,21 +51,42 @@
       </Argument>
     </Returns>
   </Signature>
-  <Source>
-    ref = new Reference(
-      new Object() {
-        public String firstName = "John", lastName = "Doe";
-        public String fullName() {
-          return firstName + " " + lastName;
-        }
-      }
-    );
-    System.out.println(obj);
-    System.out.println(ref.getValue("firstName"));
-    System.out.println(ref.getValue("lastName"));
-    ref.setValue("lastName", "Cena");
-    System.out.println(ref.invoke("fullName"));
+  <Source>obj = new Object() {
+  public String firstName = "John", lastName = "Doe";
+  public String fullName() {
+    return firstName + " " + lastName;
+  }
+  public String doSomething(String something) {
+    return something;
+  }
+  public String doSomething(String language, String something) {
+    return something;
+  }
+};
 
-    return requestEndPoint;
-  </Source>
+ref = new Reference(obj);
+System.out.println("---");
+System.out.println(obj);
+
+System.out.println(ref.getClass());
+System.out.println(ref.getValue("firstName"));
+System.out.println(ref.getValue("lastName"));
+
+ref.setValue("lastName", "Cena");
+System.out.println(ref.invoke("fullName"));
+
+for(methodDefine: ref.methodDefines("fullName"))
+  System.out.println(methodDefine);
+
+for(methodDefine: ref.methodDefines("doSomething"))
+  System.out.println(methodDefine);
+
+methods = ref.getMethods("doSomething");
+for(method: methods)
+  System.out.println(method);
+
+System.out.println(ref.invoke("doSomething", new String[] {"Hello world"}));
+System.out.println(ref.invoke("doSomething", new String[] {"eng", "Hello world"}));
+
+return requestEndPoint;</Source>
 </Rule>
