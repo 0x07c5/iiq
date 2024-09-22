@@ -43,6 +43,8 @@
     </Returns>
   </Signature>
   <Source>
+import java.util.HashMap;
+
 try {
   model = new BodyModel(
     new Operation[] {
@@ -67,6 +69,6 @@ try {
   e.printStackTrace();
 }
 
-return requestEndPoint;
+return new HashMap();
   </Source>
 </Rule>
